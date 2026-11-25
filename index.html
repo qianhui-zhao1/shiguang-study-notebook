@@ -3,393 +3,138 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#789064">
-  <meta name="description" content="拾光学习本：抹茶日系风格的个性化学习计划、每日打卡、进度追踪与复盘工具。">
+  <meta name="theme-color" content="#5f7652">
+  <meta name="description" content="拾光学习本：面向财务管理专业的学习计划、打卡、进度追踪与复盘工作台。">
   <title>拾光学习本</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到主要内容</a>
 
-  <div class="app-shell">
-    <aside class="sidebar" aria-label="主导航">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 48 48" focusable="false">
-            <path d="M8 12.5c5.6-1.9 10.9-1.1 16 2.5v24c-5.1-3.6-10.4-4.4-16-2.5z"></path>
-            <path d="M40 12.5c-5.6-1.9-10.9-1.1-16 2.5v24c5.1-3.6 10.4-4.4 16-2.5z"></path>
-            <path d="M24 15v24"></path>
-          </svg>
-        </span>
-        <div>
-          <strong>拾光学习本</strong>
-          <span>把时光写成进步</span>
-        </div>
-      </div>
+  <header class="app-header">
+    <button class="brand-lockup" type="button" data-view="today" aria-label="返回今日总览">
+      <span class="brand-seal" aria-hidden="true">拾</span>
+      <span><strong>拾光学习本</strong><small>财务管理学习工作台</small></span>
+    </button>
 
-      <nav class="nav-list">
-        <button class="nav-item active" data-view="today" type="button">
-          <span class="nav-glyph" aria-hidden="true">今</span><span>今日学习</span>
-        </button>
-        <button class="nav-item" data-view="plan" type="button">
-          <span class="nav-glyph" aria-hidden="true">划</span><span>学习计划</span>
-        </button>
-        <button class="nav-item" data-view="progress" type="button">
-          <span class="nav-glyph" aria-hidden="true">析</span><span>学习进度</span>
-        </button>
-        <button class="nav-item" data-view="review" type="button">
-          <span class="nav-glyph" aria-hidden="true">省</span><span>学习复盘</span>
-        </button>
-        <button class="nav-item" data-view="settings" type="button">
-          <span class="nav-glyph" aria-hidden="true">设</span><span>个人设置</span>
-        </button>
-      </nav>
-
-      <div class="sidebar-note">
-        <span>今天也值得被记录</span>
-        <strong>计划 · 专注 · 回望</strong>
-      </div>
-    </aside>
-
-    <main id="main-content" class="main-content" tabindex="-1">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow" id="page-eyebrow">今天也向前一点</p>
-          <h1 id="page-title">今日学习</h1>
-        </div>
-        <div class="topbar-actions">
-          <button class="button button-quiet" id="focus-add" type="button">新增任务</button>
-          <button class="avatar-button" id="open-settings" type="button" aria-label="打开个人设置">
-            <span id="avatar-letter">循</span>
-          </button>
-        </div>
-      </header>
-
-      <section class="view active" id="view-today" data-view-panel="today" aria-labelledby="page-title">
-        <div class="hero-strip">
-          <div>
-            <p id="today-date" class="hero-date"></p>
-            <h2 id="today-greeting">早上好，今天先完成最重要的一步。</h2>
-            <p id="today-subtitle">把目标拆小，行动就会开始。</p>
-          </div>
-          <div class="goal-chip">
-            <span>今日目标</span>
-            <strong id="goal-progress-text">0 / 60 分钟</strong>
-            <div class="mini-track" aria-hidden="true"><span id="goal-progress-bar"></span></div>
-          </div>
-        </div>
-
-        <div class="stat-grid" aria-label="今日概览">
-          <article class="stat-card">
-            <span>今日完成率</span>
-            <strong id="stat-completion">0%</strong>
-            <small id="stat-completion-note">还没有今日任务</small>
-          </article>
-          <article class="stat-card">
-            <span>今日学习</span>
-            <strong id="stat-minutes">0<small> 分钟</small></strong>
-            <small id="stat-minutes-note">从第一项任务开始</small>
-          </article>
-          <article class="stat-card">
-            <span>连续打卡</span>
-            <strong id="stat-streak">0<small> 天</small></strong>
-            <small>保持稳定比追求完美重要</small>
-          </article>
-          <article class="stat-card">
-            <span>待完成</span>
-            <strong id="stat-pending">0<small> 项</small></strong>
-            <small id="stat-pending-note">今天安排得很轻松</small>
-          </article>
-        </div>
-
-        <div class="two-column-layout">
-          <section class="panel primary-panel" aria-labelledby="focus-heading">
-            <div class="panel-heading">
-              <div>
-                <p class="section-kicker">今日聚焦</p>
-                <h2 id="focus-heading">三件最重要的事</h2>
-              </div>
-              <button class="text-button" id="today-add-task" type="button">新增任务</button>
-            </div>
-            <div id="focus-task-list" class="task-list"></div>
-          </section>
-
-          <aside class="panel review-prompt" aria-labelledby="quick-review-heading">
-            <div class="panel-heading compact">
-              <div>
-                <p class="section-kicker">晚间收束</p>
-                <h2 id="quick-review-heading">今天值得记住什么</h2>
-              </div>
-            </div>
-            <p>完成三问复盘，把今天的经验变成明天最小的一步。</p>
-            <dl class="review-mini-list">
-              <div><dt>完成</dt><dd id="quick-done">还没有完成记录</dd></div>
-              <div><dt>下一步</dt><dd id="quick-next">等待你的复盘</dd></div>
-            </dl>
-            <button class="button button-primary full" id="go-review" type="button">开始今日复盘</button>
-          </aside>
-        </div>
-      </section>
-
-      <section class="view" id="view-plan" data-view-panel="plan" aria-labelledby="plan-heading">
-        <div class="section-header">
-          <div>
-            <p class="section-kicker">任务清单</p>
-            <h2 id="plan-heading">把目标拆成可完成的行动</h2>
-            <p>按课程、日期和状态管理任务，先完成最重要的一件。</p>
-          </div>
-          <button class="button button-primary" id="plan-add-task" type="button">新增任务</button>
-        </div>
-
-        <div class="filter-bar" aria-label="任务筛选">
-          <label class="search-field">
-            <span class="sr-only">搜索任务</span>
-            <input id="task-search" type="search" placeholder="搜索任务或备注">
-          </label>
-          <label>
-            <span class="sr-only">按课程筛选</span>
-            <select id="filter-course"><option value="all">全部课程</option></select>
-          </label>
-          <label>
-            <span class="sr-only">按状态筛选</span>
-            <select id="filter-status">
-              <option value="all">全部状态</option>
-              <option value="pending">待完成</option>
-              <option value="completed">已完成</option>
-              <option value="overdue">已逾期</option>
-            </select>
-          </label>
-          <button class="button button-quiet" id="clear-filters" type="button">清除筛选</button>
-        </div>
-
-        <div class="panel list-panel">
-          <div class="list-summary">
-            <span id="task-count-summary">共 0 项任务</span>
-            <span>未完成优先 · 临近日期优先</span>
-          </div>
-          <div id="plan-task-list" class="task-list expanded"></div>
-        </div>
-      </section>
-
-      <section class="view" id="view-progress" data-view-panel="progress" aria-labelledby="progress-heading">
-        <div class="section-header">
-          <div>
-            <p class="section-kicker">数据反馈</p>
-            <h2 id="progress-heading">看见积累，也看见调整空间</h2>
-            <p>所有图表都来自你的任务与学习记录。</p>
-          </div>
-          <div class="period-switch" role="group" aria-label="统计周期">
-            <button type="button" class="active" data-period="7">近 7 天</button>
-            <button type="button" data-period="28">近 28 天</button>
-          </div>
-        </div>
-
-        <div class="progress-overview">
-          <article class="panel progress-ring-card">
-            <div class="progress-ring" id="overall-ring" role="img" aria-label="总体任务完成率 0%">
-              <div><strong id="overall-rate">0%</strong><span>总体完成率</span></div>
-            </div>
-            <p id="overall-insight">先新增一项真实任务，进度会从这里开始。</p>
-          </article>
-
-          <article class="panel chart-card">
-            <div class="panel-heading compact">
-              <div><p class="section-kicker">时间投入</p><h2>学习时长趋势</h2></div>
-              <strong id="period-total">0 分钟</strong>
-            </div>
-            <div id="time-chart" class="bar-chart" role="img" aria-label="近七天学习时长柱状图"></div>
-          </article>
-        </div>
-
-        <div class="two-column-layout progress-lower">
-          <section class="panel" aria-labelledby="course-progress-heading">
-            <div class="panel-heading compact">
-              <div><p class="section-kicker">课程进度</p><h2 id="course-progress-heading">每门课走到了哪里</h2></div>
-            </div>
-            <div id="course-progress-list" class="course-progress-list"></div>
-          </section>
-
-          <section class="panel" aria-labelledby="heatmap-heading">
-            <div class="panel-heading compact">
-              <div><p class="section-kicker">学习节奏</p><h2 id="heatmap-heading">最近四周打卡</h2></div>
-              <strong id="heatmap-streak">连续 0 天</strong>
-            </div>
-            <div id="checkin-heatmap" class="heatmap" aria-label="最近四周打卡日历"></div>
-            <div class="heatmap-legend"><span>少</span><i></i><i></i><i></i><i></i><span>多</span></div>
-          </section>
-        </div>
-      </section>
-
-      <section class="view" id="view-review" data-view-panel="review" aria-labelledby="review-heading">
-        <div class="section-header">
-          <div>
-            <p class="section-kicker">三问复盘</p>
-            <h2 id="review-heading">把今天的经验变成明天的一步</h2>
-            <p>不用写长篇总结，只留下真正有用的信息。</p>
-          </div>
-          <span class="date-badge" id="review-date"></span>
-        </div>
-
-        <div class="review-layout">
-          <form class="panel review-form" id="review-form">
-            <label>
-              <span><b>01</b> 今天完成了什么</span>
-              <textarea id="review-done" rows="3" maxlength="300" placeholder="例如：完成高数第二章错题整理，并复习了 3 个易错知识点。" required></textarea>
-            </label>
-            <label>
-              <span><b>02</b> 遇到的主要阻碍是什么</span>
-              <textarea id="review-blocker" rows="3" maxlength="300" placeholder="例如：题目一难就反复看答案，没有先写出已知条件。" required></textarea>
-            </label>
-            <label>
-              <span><b>03</b> 明天的最小行动是什么</span>
-              <textarea id="review-next" rows="3" maxlength="200" placeholder="例如：明晚先独立重做今天标记的 2 道错题。" required></textarea>
-            </label>
-            <label>
-              <span>一句收获 <small>选填</small></span>
-              <input id="review-learning" type="text" maxlength="120" placeholder="今天最值得保留的方法">
-            </label>
-            <button class="button button-primary" type="submit">保存今日复盘</button>
-          </form>
-
-          <aside class="panel review-summary" aria-live="polite">
-            <p class="section-kicker">复盘摘要</p>
-            <h2>继续做 · 停止做 · 下一步</h2>
-            <div id="review-summary-content" class="summary-content empty-state compact-empty">
-              <strong>写完三问后，这里会生成行动摘要</strong>
-              <p>复盘的价值不在记录，而在于改变下一次行动。</p>
-            </div>
-            <button id="create-next-task" class="button button-secondary full" type="button" disabled>加入明日计划</button>
-          </aside>
-        </div>
-
-        <section class="history-section" aria-labelledby="review-history-heading">
-          <div class="panel-heading">
-            <div><p class="section-kicker">历史回看</p><h2 id="review-history-heading">最近复盘</h2></div>
-          </div>
-          <div id="review-history" class="review-history"></div>
-        </section>
-      </section>
-
-      <section class="view" id="view-settings" data-view-panel="settings" aria-labelledby="settings-heading">
-        <div class="section-header">
-          <div>
-            <p class="section-kicker">个人设置</p>
-            <h2 id="settings-heading">让工作台适合你的学习节奏</h2>
-            <p>数据默认保存在当前浏览器，不会自动同步到其他设备。</p>
-          </div>
-        </div>
-
-        <div class="settings-grid">
-          <form class="panel settings-form" id="profile-form">
-            <div class="panel-heading compact"><div><p class="section-kicker">基本信息</p><h2>学习偏好</h2></div></div>
-            <label><span>昵称</span><input id="setting-name" type="text" maxlength="20" required></label>
-            <label><span>当前学期</span><input id="setting-semester" type="text" maxlength="30" required></label>
-            <label><span>每日学习目标 分钟</span><input id="setting-goal" type="number" min="10" max="720" step="5" required></label>
-            <button class="button button-primary" type="submit">保存设置</button>
-          </form>
-
-          <section class="panel course-settings" aria-labelledby="course-settings-heading">
-            <div class="panel-heading compact"><div><p class="section-kicker">课程管理</p><h2 id="course-settings-heading">我的课程</h2></div></div>
-            <form id="course-form" class="inline-form">
-              <label class="sr-only" for="new-course">新增课程名称</label>
-              <input id="new-course" type="text" maxlength="24" placeholder="输入课程名称">
-              <button class="button button-secondary" type="submit">添加课程</button>
-            </form>
-            <div id="course-chip-list" class="chip-list"></div>
-          </section>
-
-          <section class="panel data-settings" aria-labelledby="data-settings-heading">
-            <div class="panel-heading compact"><div><p class="section-kicker">数据管理</p><h2 id="data-settings-heading">备份与恢复</h2></div></div>
-            <p>导出文件包含设置、课程、任务、学习记录和复盘。导入前会先校验格式。</p>
-            <div class="data-actions">
-              <button class="button button-secondary" id="export-data" type="button">导出数据</button>
-              <label class="button button-quiet file-button">导入数据<input id="import-data" type="file" accept="application/json,.json"></label>
-              <button class="button button-quiet" id="load-demo" type="button">加载示例数据</button>
-              <button class="button button-danger" id="reset-data" type="button">清空全部数据</button>
-            </div>
-          </section>
-        </div>
-      </section>
-    </main>
-
-    <nav class="mobile-nav" aria-label="移动端主导航">
-      <button class="active" data-view="today" type="button"><span>今</span>今日</button>
-      <button data-view="plan" type="button"><span>划</span>计划</button>
-      <button data-view="progress" type="button"><span>析</span>进度</button>
-      <button data-view="review" type="button"><span>省</span>复盘</button>
-      <button data-view="settings" type="button"><span>设</span>设置</button>
+    <nav class="top-nav" aria-label="主导航">
+      <button class="nav-tab active" data-view="today" type="button"><span>01</span>今日桌面</button>
+      <button class="nav-tab" data-view="plan" type="button"><span>02</span>计划编排</button>
+      <button class="nav-tab" data-view="progress" type="button"><span>03</span>学习轨迹</button>
+      <button class="nav-tab" data-view="review" type="button"><span>04</span>复盘手记</button>
     </nav>
-  </div>
 
-  <dialog id="task-dialog" class="modal">
-    <form method="dialog" id="task-form">
-      <div class="modal-header">
-        <div><p class="section-kicker">学习行动</p><h2 id="task-dialog-title">新增任务</h2></div>
-        <button class="icon-button" value="cancel" type="button" data-close-dialog aria-label="关闭">×</button>
-      </div>
-      <input id="task-id" type="hidden">
-      <label class="full-field"><span>任务标题</span><input id="task-title" type="text" maxlength="80" required placeholder="写清楚要完成的具体动作"></label>
-      <div class="field-grid">
-        <label><span>课程</span><select id="task-course" required></select></label>
-        <label><span>优先级</span><select id="task-priority"><option value="high">高</option><option value="medium" selected>中</option><option value="low">低</option></select></label>
-        <label><span>计划日期</span><input id="task-plan-date" type="date" required></label>
-        <label><span>截止日期</span><input id="task-due-date" type="date" required></label>
-        <label><span>预计时长 分钟</span><input id="task-estimate" type="number" min="5" max="720" step="5" value="30" required></label>
-      </div>
-      <label class="full-field"><span>备注 <small>选填</small></span><textarea id="task-notes" rows="2" maxlength="200" placeholder="补充资料、地点或完成标准"></textarea></label>
-      <p class="form-error" id="task-form-error" role="alert"></p>
-      <div class="modal-actions">
-        <button class="button button-quiet" value="cancel" type="button" data-close-dialog>取消</button>
-        <button class="button button-primary" type="submit">保存任务</button>
-      </div>
-    </form>
-  </dialog>
+    <div class="header-tools">
+      <div class="page-context"><small id="page-eyebrow">FOCUS DESK</small><strong id="page-title">今日桌面</strong></div>
+      <button class="round-button" id="focus-add" type="button" aria-label="新增学习任务">＋</button>
+      <button class="avatar-button" id="open-settings" type="button" aria-label="打开设置"><span id="avatar-letter">光</span></button>
+    </div>
+  </header>
 
-  <dialog id="complete-dialog" class="modal small-modal">
-    <form method="dialog" id="complete-form">
-      <div class="modal-header">
-        <div><p class="section-kicker">完成打卡</p><h2>记录实际学习时长</h2></div>
-        <button class="icon-button" value="cancel" type="button" data-close-dialog aria-label="关闭">×</button>
-      </div>
-      <p id="complete-task-name" class="modal-description"></p>
-      <input id="complete-task-id" type="hidden">
-      <label><span>实际学习时长 分钟</span><input id="actual-minutes" type="number" min="5" max="720" step="5" required></label>
-      <div class="modal-actions">
-        <button class="button button-quiet" value="cancel" type="button" data-close-dialog>取消</button>
-        <button class="button button-primary" type="submit">完成并记录</button>
-      </div>
-    </form>
-  </dialog>
+  <main class="workspace" id="main-content" tabindex="-1">
+    <section class="view active" id="view-today" data-view-panel="today">
+      <div class="today-layout">
+        <article class="focus-canvas">
+          <div class="focus-copy">
+            <p class="date-line" id="today-date"></p>
+            <p class="canvas-kicker">TODAY'S MAIN LINE</p>
+            <h1 id="today-greeting">先把最关键的一页学明白。</h1>
+            <p id="today-subtitle">三门专业课，不求堆满日程，只把每一次学习做实。</p>
+            <button class="ink-button" id="today-add-task" type="button">写下一项任务 <span>↗</span></button>
+          </div>
+          <div class="focus-metrics">
+            <div class="completion-orbit" id="completion-orbit"><div><strong id="stat-completion">0%</strong><span>今日完成</span></div></div>
+            <p id="stat-completion-note">今天还没有完成任务</p>
+          </div>
+          <div class="paper-fold" aria-hidden="true"></div>
+        </article>
 
-  <dialog id="confirm-dialog" class="modal small-modal">
-    <form method="dialog">
-      <div class="modal-header"><h2 id="confirm-title">请确认</h2></div>
-      <p id="confirm-message"></p>
-      <div class="modal-actions">
-        <button class="button button-quiet" value="cancel">取消</button>
-        <button class="button button-danger" id="confirm-ok" value="confirm">确认</button>
-      </div>
-    </form>
-  </dialog>
+        <aside class="day-rail">
+          <div class="rail-heading"><span>学习节奏</span><small>LIVE</small></div>
+          <div class="rail-number"><small>专注时间</small><strong id="stat-minutes">0</strong><span>分钟</span><p id="stat-minutes-note">从第一段专注开始</p></div>
+          <div class="rail-divider"></div>
+          <div class="rail-pair"><div><small>连续记录</small><strong id="stat-streak">0</strong><span>天</span></div><div><small>今日待办</small><strong id="stat-pending">0</strong><span>项</span></div></div>
+          <p class="rail-foot" id="stat-pending-note">轻量安排，专注完成</p>
+        </aside>
 
-  <dialog id="onboarding-dialog" class="modal onboarding-modal">
-    <form method="dialog" id="onboarding-form">
-      <p class="section-kicker">欢迎使用拾光学习本</p>
-      <h2>先用一分钟设置你的学习节奏</h2>
-      <p>你可以加载示例快速体验，也可以从自己的第一项任务开始。</p>
-      <div class="field-grid onboarding-fields">
-        <label><span>怎么称呼你</span><input id="onboarding-name" type="text" maxlength="20" value="同学" required></label>
-        <label><span>每日目标 分钟</span><input id="onboarding-goal" type="number" min="10" max="720" step="5" value="90" required></label>
-      </div>
-      <div class="onboarding-choice">
-        <button class="choice-card" id="start-demo" type="button"><strong>体验示例数据</strong><span>带着三门课程和近期记录开始</span></button>
-        <button class="choice-card" id="start-empty" type="button"><strong>从空白开始</strong><span>只保留基本设置，添加真实任务</span></button>
-      </div>
-    </form>
-  </dialog>
+        <section class="task-stage">
+          <div class="section-title-row"><div><span class="number-label">A</span><div><small>FOCUS QUEUE</small><h2>今天先做这些</h2></div></div><span class="quiet-badge" id="today-task-count">0 项</span></div>
+          <div class="focus-task-list" id="focus-task-list"></div>
+        </section>
 
-  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+        <aside class="review-slip">
+          <div class="slip-pin" aria-hidden="true"></div><p class="slip-label">昨日留给今天</p><blockquote id="quick-next">还没有写下下一步行动。</blockquote>
+          <div class="slip-meta"><span>昨日完成</span><p id="quick-done">暂无昨日复盘</p></div><button class="text-button" id="go-review" type="button">翻到复盘页 →</button>
+        </aside>
 
+        <section class="week-ribbon">
+          <div class="section-title-row compact"><div><span class="number-label">B</span><div><small>LAST 7 DAYS</small><h2>近七日节奏</h2></div></div></div>
+          <div class="week-strip" id="today-week-strip"></div>
+          <div class="goal-line"><span>今日目标</span><strong id="goal-progress-text">0 / 100 分钟</strong><div><i id="goal-progress-bar"></i></div></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="view" id="view-plan" data-view-panel="plan" hidden>
+      <div class="view-intro split-intro"><div><p class="canvas-kicker">PLAN EDITOR</p><h1>把专业课拆成<br>可以开始的动作。</h1></div><div><p>按课程、日期和优先级编排任务。每一项只描述一个清晰动作，做完即可勾选。</p><button class="ink-button" id="plan-add-task" type="button">新增计划 <span>＋</span></button></div></div>
+      <div class="plan-board">
+        <aside class="filter-drawer">
+          <div class="drawer-index">FILTER / 01</div>
+          <label><span>检索任务</span><input id="task-search" type="search" placeholder="输入关键词"></label>
+          <label><span>课程</span><select id="filter-course"><option value="">全部课程</option></select></label>
+          <label><span>状态</span><select id="filter-status"><option value="">全部状态</option><option value="todo">未完成</option><option value="done">已完成</option></select></label>
+          <button class="outline-button" id="clear-filters" type="button">清除筛选</button>
+          <div class="course-key"><p><i class="dot stat"></i>统计学</p><p><i class="dot english"></i>商务英语3</p><p><i class="dot accounting"></i>中级财务会计Ⅱ</p></div>
+        </aside>
+        <section class="task-canvas"><div class="canvas-toolbar"><div><small>ALL ASSIGNMENTS</small><h2>任务清单</h2></div><strong id="task-count-summary">0 项</strong></div><div class="plan-task-list" id="plan-task-list"></div></section>
+      </div>
+    </section>
+
+    <section class="view" id="view-progress" data-view-panel="progress" hidden>
+      <div class="view-intro progress-intro"><div><p class="canvas-kicker">LEARNING TRACE</p><h1 id="progress-heading">这一周，时间去了哪里？</h1></div><div class="period-switch" aria-label="统计周期"><button class="active" data-period="7" type="button">7 天</button><button data-period="30" type="button">30 天</button></div></div>
+      <div class="progress-mosaic">
+        <article class="mosaic-card overall-card"><span class="card-index">01 / 完成率</span><div class="large-ring" id="overall-ring"><strong id="overall-rate">0%</strong><span>任务完成</span></div><p id="overall-insight">开始记录后，这里会出现你的学习趋势。</p></article>
+        <article class="mosaic-card time-card"><div class="mosaic-head"><div><span class="card-index">02 / 时间分布</span><h2>专注分钟</h2></div><strong id="period-total">0 <small>min</small></strong></div><div class="time-chart" id="time-chart"></div></article>
+        <article class="mosaic-card course-card"><span class="card-index">03 / 课程进度</span><h2>三门课的推进情况</h2><div id="course-progress-list" class="course-progress-list"></div></article>
+        <article class="mosaic-card heatmap-card"><div class="mosaic-head"><div><span class="card-index">04 / 学习足迹</span><h2>持续比突击更可靠</h2></div><strong><span id="heatmap-streak">0</span> 天连续</strong></div><div class="checkin-heatmap" id="checkin-heatmap"></div><div class="heat-legend"><span>少</span><i></i><i></i><i></i><i></i><span>多</span></div></article>
+      </div>
+    </section>
+
+    <section class="view" id="view-review" data-view-panel="review" hidden>
+      <div class="view-intro split-intro review-intro"><div><p class="canvas-kicker">DAILY REVIEW</p><h1>把今天翻译成<br>明天能执行的一步。</h1></div><p>复盘不是给自己打分，而是留下证据：做了什么、卡在哪里、下一步从哪开始。</p></div>
+      <div class="notebook-spread">
+        <section class="notebook-page writing-page"><div class="page-number">LEFT / INPUT</div><form id="review-form">
+          <label class="date-field"><span>复盘日期</span><input id="review-date" type="date" required></label>
+          <label><span>01　今天推进了什么？</span><textarea id="review-done" rows="4" placeholder="写事实，不写评价……"></textarea></label>
+          <label><span>02　哪个环节最卡？</span><textarea id="review-blocker" rows="3" placeholder="记录具体知识点或步骤……"></textarea></label>
+          <label><span>03　明天从哪里接着做？</span><textarea id="review-next" rows="3" placeholder="写成一个可以直接开始的动作……"></textarea></label>
+          <label><span>04　今天留下的一个认识</span><textarea id="review-learning" rows="3" placeholder="一句话也可以……"></textarea></label>
+          <button class="ink-button full" type="submit">收进今日手记 <span>✓</span></button>
+        </form></section>
+        <section class="notebook-page summary-page"><div class="page-number">RIGHT / OUTPUT</div><p class="summary-date" id="review-summary-date">今日复盘</p><div id="review-summary-content" class="review-summary-content"></div><button class="outline-button" id="create-next-task" type="button">将“下一步”转为任务</button><div class="history-block"><div class="history-title"><span>过往手记</span><small>ARCHIVE</small></div><div id="review-history" class="review-history"></div></div></section>
+      </div>
+    </section>
+
+    <section class="view" id="view-settings" data-view-panel="settings" hidden>
+      <div class="view-intro split-intro"><div><p class="canvas-kicker">WORKBENCH SETUP</p><h1>调整你的<br>学习工作台。</h1></div><p>设置仅保存在当前浏览器。你可以随时导出备份，离线使用时也不需要登录。</p></div>
+      <div class="settings-index">
+        <section class="setting-sheet"><span class="sheet-tab">01 / PROFILE</span><h2>学习身份</h2><form id="profile-form"><label><span>称呼</span><input id="setting-name" maxlength="20" required></label><label><span>专业</span><input id="setting-major" maxlength="30" required></label><label><span>当前阶段</span><input id="setting-semester" maxlength="40" required></label><label><span>每日目标（分钟）</span><input id="setting-goal" type="number" min="10" max="720" step="5" required></label><button class="ink-button" type="submit">保存设置</button></form></section>
+        <section class="setting-sheet"><span class="sheet-tab">02 / COURSES</span><h2>课程目录</h2><form id="course-form" class="inline-form"><input id="new-course" maxlength="30" placeholder="添加课程名称" required><button type="submit">＋</button></form><div id="course-chip-list" class="course-chip-list"></div><p class="sheet-note">删除课程不会删除已有任务，只会从新建任务的选项中移除。</p></section>
+        <section class="setting-sheet data-sheet"><span class="sheet-tab">03 / DATA</span><h2>数据与备份</h2><p>所有记录保存在本机浏览器，不上传到服务器。</p><div class="data-actions"><button class="outline-button" id="export-data" type="button">导出 JSON</button><button class="outline-button" id="import-data" type="button">导入备份</button><button class="outline-button" id="load-demo" type="button">恢复专业示例</button><button class="danger-button" id="reset-data" type="button">清空全部数据</button></div><input id="import-file" type="file" accept="application/json,.json" hidden></section>
+      </div>
+    </section>
+  </main>
+
+  <nav class="mobile-nav" aria-label="移动端导航"><button class="active" data-view="today" type="button">今日</button><button data-view="plan" type="button">计划</button><button data-view="progress" type="button">轨迹</button><button data-view="review" type="button">复盘</button><button data-view="settings" type="button">设置</button></nav>
+
+  <dialog id="task-dialog" class="modal"><form method="dialog" id="task-form"><div class="modal-head"><div><small>NEW ASSIGNMENT</small><h2 id="task-dialog-title">新增学习任务</h2></div><button class="icon-button" value="cancel" type="submit" aria-label="关闭">×</button></div><input id="task-id" type="hidden"><label><span>任务名称</span><input id="task-title" maxlength="80" placeholder="例如：整理抽样分布的三类题型" required autofocus></label><div class="field-grid"><label><span>课程</span><select id="task-course" required></select></label><label><span>计划日期</span><input id="task-due" type="date" required></label></div><div class="field-grid"><label><span>预计分钟</span><input id="task-minutes" type="number" min="5" max="720" step="5" value="30" required></label><label><span>优先级</span><select id="task-priority"><option value="high">高</option><option value="medium" selected>中</option><option value="low">低</option></select></label></div><label><span>行动提示</span><textarea id="task-note" rows="3" maxlength="180" placeholder="写下第一步，降低开始难度"></textarea></label><div class="modal-actions"><button class="outline-button" value="cancel" type="submit">取消</button><button class="ink-button" id="save-task" value="default" type="submit">保存任务</button></div></form></dialog>
+
+  <dialog id="complete-dialog" class="modal compact-modal"><form method="dialog" id="complete-form"><div class="modal-head"><div><small>CHECK IN</small><h2>记录这次完成</h2></div><button class="icon-button" value="cancel" type="submit" aria-label="关闭">×</button></div><input id="complete-task-id" type="hidden"><p id="complete-task-name" class="complete-task-name"></p><label><span>实际专注分钟</span><input id="complete-minutes" type="number" min="1" max="720" step="1" required></label><div class="modal-actions"><button class="outline-button" value="cancel" type="submit">取消</button><button class="ink-button" id="confirm-complete" value="default" type="submit">完成并打卡</button></div></form></dialog>
+
+  <dialog id="confirm-dialog" class="modal compact-modal"><form method="dialog"><h2 id="confirm-title">请确认</h2><p id="confirm-message"></p><div class="modal-actions"><button class="outline-button" value="cancel">取消</button><button class="danger-button" id="confirm-ok" value="default">确认</button></div></form></dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="core.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
