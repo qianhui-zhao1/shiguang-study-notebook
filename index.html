@@ -76,42 +76,51 @@
     </section>
 
     <section class="view" id="view-plan" data-view-panel="plan" hidden>
-      <div class="view-intro split-intro"><div><p class="canvas-kicker">PLAN EDITOR</p><h1>把专业课拆成<br>可以开始的动作。</h1></div><div><p>按课程、日期和优先级编排任务。每一项只描述一个清晰动作，做完即可勾选。</p><button class="ink-button" id="plan-add-task" type="button">新增计划 <span>＋</span></button></div></div>
-      <div class="plan-board">
-        <aside class="filter-drawer">
-          <div class="drawer-index">FILTER / 01</div>
-          <label><span>检索任务</span><input id="task-search" type="search" placeholder="输入关键词"></label>
-          <label><span>课程</span><select id="filter-course"><option value="">全部课程</option></select></label>
-          <label><span>状态</span><select id="filter-status"><option value="">全部状态</option><option value="todo">未完成</option><option value="done">已完成</option></select></label>
-          <button class="outline-button" id="clear-filters" type="button">清除筛选</button>
-          <div class="course-key"><p><i class="dot stat"></i>统计学</p><p><i class="dot english"></i>商务英语3</p><p><i class="dot accounting"></i>中级财务会计Ⅱ</p></div>
-        </aside>
-        <section class="task-canvas"><div class="canvas-toolbar"><div><small>ALL ASSIGNMENTS</small><h2>任务清单</h2></div><strong id="task-count-summary">0 项</strong></div><div class="plan-task-list" id="plan-task-list"></div></section>
-      </div>
+      <div class="view-intro split-intro plan-intro"><div><p class="canvas-kicker">ACTION PLANNER</p><h1>从计划里<br>看到行动。</h1></div><div><p>让日期成为行动的坐标。先看今天要推进什么，再决定下一步从哪一项开始。</p><button class="ink-button" id="plan-add-task" type="button">写入新行动 <span>＋</span></button></div></div>
+      <section class="plan-control-bar" aria-label="任务筛选">
+        <div class="control-lead"><span>01</span><p><strong>行动检索</strong><small>快速找到课程与任务</small></p></div>
+        <label><span>关键词</span><input id="task-search" type="search" placeholder="搜索一项行动"></label>
+        <label><span>课程范围</span><select id="filter-course"><option value="">全部课程</option></select></label>
+        <label><span>完成状态</span><select id="filter-status"><option value="">全部状态</option><option value="todo">进行中</option><option value="done">已完成</option></select></label>
+        <button class="outline-button" id="clear-filters" type="button">重置</button>
+      </section>
+      <section class="action-ledger">
+        <div class="ledger-heading"><div><span class="number-label">02</span><div><small>DATED ACTIONS</small><h2>按日期展开行动</h2></div></div><strong id="task-count-summary">0 项</strong></div>
+        <div class="plan-task-list" id="plan-task-list"></div>
+      </section>
     </section>
 
     <section class="view" id="view-progress" data-view-panel="progress" hidden>
-      <div class="view-intro progress-intro"><div><p class="canvas-kicker">LEARNING TRACE</p><h1 id="progress-heading">这一周，时间去了哪里？</h1></div><div class="period-switch" aria-label="统计周期"><button class="active" data-period="7" type="button">7 天</button><button data-period="30" type="button">30 天</button></div></div>
-      <div class="progress-mosaic">
-        <article class="mosaic-card overall-card"><span class="card-index">01 / 完成率</span><div class="large-ring" id="overall-ring"><strong id="overall-rate">0%</strong><span>任务完成</span></div><p id="overall-insight">开始记录后，这里会出现你的学习趋势。</p></article>
-        <article class="mosaic-card time-card"><div class="mosaic-head"><div><span class="card-index">02 / 时间分布</span><h2>专注分钟</h2></div><strong id="period-total">0 <small>min</small></strong></div><div class="time-chart" id="time-chart"></div></article>
-        <article class="mosaic-card course-card"><span class="card-index">03 / 课程进度</span><h2>三门课的推进情况</h2><div id="course-progress-list" class="course-progress-list"></div></article>
-        <article class="mosaic-card heatmap-card"><div class="mosaic-head"><div><span class="card-index">04 / 学习足迹</span><h2>持续比突击更可靠</h2></div><strong><span id="heatmap-streak">0</span> 天连续</strong></div><div class="checkin-heatmap" id="checkin-heatmap"></div><div class="heat-legend"><span>少</span><i></i><i></i><i></i><i></i><span>多</span></div></article>
+      <div class="view-intro progress-intro"><div><p class="canvas-kicker">LEARNING FOOTPRINT</p><h1 id="progress-heading">从日期里，<br>看见学习留下的痕迹。</h1></div><p class="trace-instruction">点击任意日期，查看当天的完成率、专注时间和课程推进。</p></div>
+      <div class="trace-workbench">
+        <section class="trace-map">
+          <div class="trace-map-head"><div><span class="card-index">01 / 学习足迹</span><h2>最近六十天</h2></div><strong><span id="heatmap-streak">0</span> 天连续记录</strong></div>
+          <div class="checkin-heatmap footprint-grid" id="checkin-heatmap"></div>
+          <div class="footprint-note"><i></i><span>颜色越深，当天专注时间越长；每个格子都标有月份和日期。</span></div>
+        </section>
+        <aside class="trace-detail">
+          <div class="detail-date"><span>SELECTED DAY</span><h2 id="trace-selected-date">今天</h2><p id="trace-selected-weekday"></p></div>
+          <div class="day-metrics">
+            <article><span>任务完成率</span><strong id="overall-rate">0%</strong><p id="overall-insight">0 / 0 项</p></article>
+            <article><span>专注时间</span><strong id="period-total">0<small>min</small></strong><p>来自当天的打卡记录</p></article>
+          </div>
+          <div class="day-course-progress"><span>当天课程进度</span><div id="course-progress-list" class="course-progress-list"></div></div>
+        </aside>
       </div>
     </section>
 
     <section class="view" id="view-review" data-view-panel="review" hidden>
-      <div class="view-intro split-intro review-intro"><div><p class="canvas-kicker">DAILY REVIEW</p><h1>把今天翻译成<br>明天能执行的一步。</h1></div><p>复盘不是给自己打分，而是留下证据：做了什么、卡在哪里、下一步从哪开始。</p></div>
+      <div class="view-intro split-intro review-intro"><div><p class="canvas-kicker">TODAY IN VIEW</p><h1>看到今天的自己。</h1></div><p>不急着评价好坏，只从一天里拾取四个片段：投入、理解、好奇与想对自己说的话。</p></div>
       <div class="notebook-spread">
         <section class="notebook-page writing-page"><div class="page-number">LEFT / INPUT</div><form id="review-form">
           <label class="date-field"><span>复盘日期</span><input id="review-date" type="date" required></label>
-          <label><span>01　今天推进了什么？</span><textarea id="review-done" rows="4" placeholder="写事实，不写评价……"></textarea></label>
-          <label><span>02　哪个环节最卡？</span><textarea id="review-blocker" rows="3" placeholder="记录具体知识点或步骤……"></textarea></label>
-          <label><span>03　明天从哪里接着做？</span><textarea id="review-next" rows="3" placeholder="写成一个可以直接开始的动作……"></textarea></label>
-          <label><span>04　今天留下的一个认识</span><textarea id="review-learning" rows="3" placeholder="一句话也可以……"></textarea></label>
-          <button class="ink-button full" type="submit">收进今日手记 <span>✓</span></button>
+          <label><span>01　今天哪个学习瞬间最投入？</span><textarea id="review-done" rows="4" placeholder="回想一个忘记看时间的片段……"></textarea></label>
+          <label><span>02　哪个知识点在今天变清楚了？</span><textarea id="review-blocker" rows="3" placeholder="写下理解发生变化的地方……"></textarea></label>
+          <label><span>03　还有哪个问题值得继续追踪？</span><textarea id="review-next" rows="3" placeholder="留下一条想继续探究的线索……"></textarea></label>
+          <label><span>04　给今天的自己留一句页边批注</span><textarea id="review-learning" rows="3" placeholder="一句提醒、肯定或诚实的感受……"></textarea></label>
+          <button class="ink-button full" type="submit">收藏今天的自己 <span>✓</span></button>
         </form></section>
-        <section class="notebook-page summary-page"><div class="page-number">RIGHT / OUTPUT</div><p class="summary-date" id="review-summary-date">今日复盘</p><div id="review-summary-content" class="review-summary-content"></div><button class="outline-button" id="create-next-task" type="button">将“下一步”转为任务</button><div class="history-block"><div class="history-title"><span>过往手记</span><small>ARCHIVE</small></div><div id="review-history" class="review-history"></div></div></section>
+        <section class="notebook-page summary-page"><div class="page-number">RIGHT / PORTRAIT</div><p class="summary-date" id="review-summary-date">今日切片</p><div id="review-summary-content" class="review-summary-content"></div><button class="outline-button" id="create-next-task" type="button">把“继续追踪”写进计划</button><div class="history-block"><div class="history-title"><span>过去的自己</span><small>ARCHIVE</small></div><div id="review-history" class="review-history"></div></div></section>
       </div>
     </section>
 

@@ -22,15 +22,15 @@
   const priorityLabel = { high: "高优先", medium: "中优先", low: "低优先" };
   const viewMeta = {
     today: ["FOCUS DESK", "今日桌面"],
-    plan: ["PLAN EDITOR", "计划编排"],
-    progress: ["LEARNING TRACE", "学习轨迹"],
-    review: ["DAILY REVIEW", "复盘手记"],
+    plan: ["ACTION PLANNER", "计划编排"],
+    progress: ["LEARNING FOOTPRINT", "学习轨迹"],
+    review: ["TODAY IN VIEW", "复盘手记"],
     settings: ["WORKBENCH SETUP", "工作台设置"],
   };
 
   let state = store.state;
   let activeView = "today";
-  let progressPeriod = 7;
+  let selectedTraceDate = today();
   let pendingConfirmation = null;
   let toastTimer = null;
 
@@ -105,10 +105,10 @@
         <span class="course-tag">${escapeHTML(task.course)}</span>
       </article>`;
     }
-    return `<article class="plan-task ${task.status === "done" ? "done" : ""}" data-task-id="${escapeHTML(task.id)}">
-      <i class="priority-mark ${escapeHTML(task.priority)}" aria-hidden="true"></i>
+    return `<article class="plan-task action-card ${task.status === "done" ? "done" : ""}" data-task-id="${escapeHTML(task.id)}">
+      <div class="action-check"><button class="check-button" data-action="toggle" type="button" aria-label="${task.status === "done" ? "恢复未完成" : "完成任务"}">${task.status === "done" ? "✓" : ""}</button></div>
       <div class="task-main"><strong>${escapeHTML(task.title)}</strong><p>${escapeHTML(task.note || "尚未填写行动提示")}</p>
-        <div class="task-meta"><span>${escapeHTML(task.course)}</span><span>${humanDate(task.due)}</span><span>${task.minutes} 分钟</span><span>${priorityLabel[task.priority] || "普通"}</span></div>
+        <div class="task-meta"><span>${escapeHTML(task.course)}</span><span>${task.minutes} 分钟</span><span class="priority-pill ${escapeHTML(task.priority)}">${priorityLabel[task.priority] || "普通"}</span></div>
       </div>
       <div class="task-actions">
         <button data-action="toggle" type="button">${task.status === "done" ? "恢复" : "完成"}</button>
@@ -178,39 +178,37 @@
     const tasks = [...state.tasks].filter((task) => {
       const haystack = `${task.title} ${task.course} ${task.note || ""}`.toLowerCase();
       return (!query || haystack.includes(query)) && (!course || task.course === course) && (!status || task.status === status);
-    }).sort(taskSort);
+    }).sort((a, b) => String(a.due).localeCompare(String(b.due)) || (priorityWeight[a.priority] ?? 9) - (priorityWeight[b.priority] ?? 9) || (a.status === "done" ? 1 : -1));
     $("#task-count-summary").textContent = `${tasks.length} 项`;
-    $("#plan-task-list").innerHTML = tasks.length
-      ? tasks.map((task) => taskRow(task, "plan")).join("")
-      : `<div class="empty-state">没有符合条件的任务。调整筛选，或新增一项计划。</div>`;
+    if (!tasks.length) {
+      $("#plan-task-list").innerHTML = `<div class="empty-state">没有符合条件的行动。调整筛选，或写入一项新行动。</div>`;
+      return;
+    }
+    const groups = tasks.reduce((result, task) => {
+      (result[task.due] ||= []).push(task);
+      return result;
+    }, {});
+    $("#plan-task-list").innerHTML = Object.entries(groups).map(([date, dayTasks]) => {
+      const relation = date === today() ? "今天" : date === addDays(today(), 1) ? "明天" : date < today() ? "已过日期" : "接下来";
+      const weekday = new Intl.DateTimeFormat("zh-CN", { weekday: "long" }).format(new Date(`${date}T12:00:00`));
+      return `<section class="plan-day-group">
+        <header><div><span>${relation}</span><strong>${humanDate(date)}</strong><small>${weekday}</small></div><em>${dayTasks.filter((task) => task.status === "done").length}/${dayTasks.length} 完成</em></header>
+        <div class="day-action-list">${dayTasks.map((task) => taskRow(task, "plan")).join("")}</div>
+      </section>`;
+    }).join("");
   }
 
   function renderProgress() {
-    const start = addDays(today(), -(progressPeriod - 1));
-    const inRange = (date) => date >= start && date <= today();
-    const tasks = state.tasks.filter((task) => inRange(task.due));
+    const tasks = state.tasks.filter((task) => task.due === selectedTraceDate);
     const done = tasks.filter((task) => task.status === "done");
     const rate = tasks.length ? Math.round((done.length / tasks.length) * 100) : 0;
-    const checkins = state.checkins.filter((entry) => inRange(entry.date));
-    const total = checkins.reduce((sum, entry) => sum + (Number(entry.minutes) || 0), 0);
-    $("#progress-heading").textContent = progressPeriod === 7 ? "这一周，时间去了哪里？" : "这一个月，节奏发生了什么变化？";
+    const minutes = Number(getCheckin(selectedTraceDate)?.minutes) || 0;
+    const selectedDate = new Date(`${selectedTraceDate}T12:00:00`);
+    $("#trace-selected-date").textContent = humanDate(selectedTraceDate);
+    $("#trace-selected-weekday").textContent = new Intl.DateTimeFormat("zh-CN", { year: "numeric", weekday: "long" }).format(selectedDate);
     $("#overall-rate").textContent = `${rate}%`;
-    $("#overall-ring").style.setProperty("--progress", rate);
-    $("#overall-insight").textContent = tasks.length
-      ? `本周期完成 ${done.length} 项，共安排 ${tasks.length} 项。${rate >= 70 ? "推进稳定，继续保持当前拆分方式。" : "可以缩小单项任务，让完成更容易发生。"}`
-      : "本周期还没有任务，先从一项明确行动开始。";
-    $("#period-total").innerHTML = `${total} <small>min</small>`;
-
-    const chartDays = Array.from({ length: progressPeriod }, (_, index) => addDays(today(), index - progressPeriod + 1));
-    const maxMinutes = Math.max(...chartDays.map((day) => Number(getCheckin(day)?.minutes) || 0), 1);
-    const sampled = progressPeriod === 30 ? chartDays.filter((_, index) => index % 2 === 0 || index === 29) : chartDays;
-    $("#time-chart").innerHTML = sampled.map((day) => {
-      const minutes = Number(getCheckin(day)?.minutes) || 0;
-      const label = progressPeriod === 7
-        ? new Intl.DateTimeFormat("zh-CN", { weekday: "short" }).format(new Date(`${day}T12:00:00`))
-        : String(Number(day.slice(-2)));
-      return `<div class="chart-column" title="${humanDate(day)}：${minutes} 分钟"><strong>${minutes || ""}</strong><i style="height:${Math.max((minutes / maxMinutes) * 82, 2)}%"></i><span>${label}</span></div>`;
-    }).join("");
+    $("#overall-insight").textContent = tasks.length ? `${done.length} / ${tasks.length} 项完成` : "当天没有安排任务";
+    $("#period-total").innerHTML = `${minutes}<small>min</small>`;
 
     $("#course-progress-list").innerHTML = state.settings.courses.map((course) => {
       const courseTasks = tasks.filter((task) => task.course === course);
@@ -222,9 +220,13 @@
     $("#heatmap-streak").textContent = calculateStreak();
     const heatDays = Array.from({ length: 60 }, (_, index) => addDays(today(), index - 59));
     $("#checkin-heatmap").innerHTML = heatDays.map((day) => {
-      const minutes = Number(getCheckin(day)?.minutes) || 0;
-      const level = minutes === 0 ? 0 : minutes < 30 ? 1 : minutes < 60 ? 2 : minutes < 100 ? 3 : 4;
-      return `<span class="heat-cell" data-level="${level}" title="${humanDate(day)}：${minutes} 分钟"></span>`;
+      const dayMinutes = Number(getCheckin(day)?.minutes) || 0;
+      const level = dayMinutes === 0 ? 0 : dayMinutes < 30 ? 1 : dayMinutes < 60 ? 2 : dayMinutes < 100 ? 3 : 4;
+      const date = new Date(`${day}T12:00:00`);
+      const month = `${date.getMonth() + 1}月`;
+      const dayNumber = date.getDate();
+      const weekday = new Intl.DateTimeFormat("zh-CN", { weekday: "short" }).format(date);
+      return `<button class="heat-cell footprint-cell ${day === selectedTraceDate ? "selected" : ""}" data-level="${level}" data-trace-date="${day}" aria-pressed="${day === selectedTraceDate}" type="button" title="${humanDate(day)}：${dayMinutes} 分钟"><span>${month}</span><strong>${dayNumber}</strong><small>${weekday}</small></button>`;
     }).join("");
   }
 
@@ -238,10 +240,10 @@
     $("#review-learning").value = review?.learning || "";
     $("#review-summary-date").textContent = `${humanDate(date)} · ${review ? "已收录" : "等待书写"}`;
     const rows = [
-      ["TODAY / 推进", review?.done],
-      ["BLOCK / 卡点", review?.blocker],
-      ["NEXT / 下一步", review?.next],
-      ["NOTE / 新认识", review?.learning],
+      ["FOCUS / 投入瞬间", review?.done],
+      ["CLEAR / 理解变化", review?.blocker],
+      ["CURIOUS / 继续追踪", review?.next],
+      ["MARGIN / 页边批注", review?.learning],
     ];
     $("#review-summary-content").innerHTML = rows.map(([label, value]) => `<div class="review-summary-item"><small>${label}</small><p>${escapeHTML(value || "尚未填写")}</p></div>`).join("");
     $("#create-next-task").disabled = !review?.next;
@@ -386,11 +388,12 @@
       $("#filter-status").value = "";
       renderPlan();
     });
-    $$('[data-period]').forEach((button) => button.addEventListener("click", () => {
-      progressPeriod = Number(button.dataset.period);
-      $$('[data-period]').forEach((item) => item.classList.toggle("active", item === button));
+    $("#checkin-heatmap").addEventListener("click", (event) => {
+      const cell = event.target.closest("[data-trace-date]");
+      if (!cell) return;
+      selectedTraceDate = cell.dataset.traceDate;
       renderProgress();
-    }));
+    });
 
     $("#review-date").addEventListener("change", renderReview);
     $("#review-form").addEventListener("submit", (event) => {
@@ -501,7 +504,8 @@
     $("#review-date").value = today();
     bindEvents();
     renderAll();
-    showView("today");
+    const requestedView = new URLSearchParams(window.location.search).get("view");
+    showView(viewMeta[requestedView] ? requestedView : "today");
   }
 
   init();
