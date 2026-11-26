@@ -504,8 +504,12 @@
     $("#review-date").value = today();
     bindEvents();
     renderAll();
-    const requestedView = new URLSearchParams(window.location.search).get("view");
-    showView(viewMeta[requestedView] ? requestedView : "today");
+    const entryUrl = new URL(window.location.href);
+    if (entryUrl.searchParams.has("view")) {
+      entryUrl.searchParams.delete("view");
+      window.history.replaceState(null, "", `${entryUrl.pathname}${entryUrl.search}${entryUrl.hash}`);
+    }
+    showView("today");
   }
 
   init();
